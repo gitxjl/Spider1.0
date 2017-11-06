@@ -1,0 +1,14 @@
+{
+
+  "debug": false,
+  "print": {
+    "logOrErrorPrint": true,
+    "sqlLogPrint": true
+  },
+  "imgPath": "D:/uploadfiles/kaifakuai/",
+  "logPath": {
+    "log": "./Log/Log",
+    "error": "./Log/Error",
+    "sql": "./Log/Sql"
+  }
+}
