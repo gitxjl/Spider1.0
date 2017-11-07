@@ -26,7 +26,7 @@ class SpiderBase:
         return BeautifulSoup(html, "html.parser")
 
     # 判断字符串是否属于该列表
-    def isStrInList(self,str,list):
+    def isStrInList(self, str, list):
         for i in list:
             if i in str:
                 return 1
@@ -73,14 +73,14 @@ class SpiderBase:
         return item
 
     # 读取css样式文件内容获取图片地址 下载图片
-    def getCssImgFile(self,files,url = ''):
-        fileObject = open(self.config['imgPath'] + files , 'rb')
+    def getCssImgFile(self, files, url=''):
+        fileObject = open(self.config['imgPath'] + files, 'rb')
         try:
             allTheText = fileObject.read()
             fileObject.close()
             urlPathArr = re.findall(r"url\((.+?)\)", str(allTheText))
             for i in urlPathArr:
-                self.downFile(url+i)
+                self.downFile(url + i)
         finally:
             fileObject.close()
 
@@ -89,13 +89,29 @@ class SpiderBase:
         # 获取文件路径
         return re.match('http.*?://.*?/(.*)', url).group(1)
 
+    # 判断文件是否存在
+    def isFileLocal(self, file):
+        try:
+            # 获取文件路径
+            pathFile = self.config['imgPath'] + file
+
+            # 判断本地文件是否存在
+            if os.path.exists(pathFile): return None
+
+            return pathFile
+
+        except:
+            return None
+
+
+
     # 文件下载
-    def downFile(self, url, spath = ''):
+    def downFile(self, url, spath=''):
         pathFile = url
         try:
             # 获取文件路径
-            file=re.match('http.*?://.*?/(.*)', url).group(1)
-            if file.find('/')==0:file=file[1:]
+            file = re.match('http.*?://.*?/(.*)', url).group(1)
+            if file.find('/') == 0: file = file[1:]
             pathFile = self.config['imgPath'] + file
             # 获取文件内容
             ir = requests.get(url)

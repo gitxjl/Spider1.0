@@ -2,15 +2,16 @@ from Framework.SpiderBase import *
 import re, bs4, os, string
 from urllib import parse
 
+
 class DemoSpider(SpiderBase, UrlBase):
+    inUrl = 'http://www.kaifakuai.com'
     picFormat = [".jpg", ".jpeg", ".png", ".gif"]
     httpFormat = ["http", "https"]
-    filiter = ["javascript:","taobao"]
+    filiter = ["javascript:", "taobao"]
     suffix = ["index.html"]
-    inUrl = 'http://www.kaifakuai.com'
     cssFormat = [".css"]
-    htmlLists = []
     isPass = 0
+
     def start(self):
         self.getHtmlCode(self.inUrl)
 
@@ -21,10 +22,11 @@ class DemoSpider(SpiderBase, UrlBase):
         link_all = []  # 样式 ico 文件地址
         script_all = []  # 脚本地址
         setHtmlUrlLists = []  # 再次访问地址
-        cssPathLists = [] # 样式文件地址
+        cssPathLists = []  # 样式文件地址
 
         # 判断 url 是否正确
         if self.isStrInList(url, self.httpFormat) == 1:
+
             allHtmlCentent = self.getHtmlObj(url)
 
             aLabelAll = allHtmlCentent.findAll('a')
@@ -110,8 +112,8 @@ class DemoSpider(SpiderBase, UrlBase):
 
             # 循环下载其他页面
             for i in setHtmlUrlLists:
-                if i == self.inUrl:self.isPass = 1
-                if self.isPass and i == self.inUrl == 1:continue
+                if i == self.inUrl: self.isPass = 1
+                if self.isPass and i == self.inUrl == 1: continue
                 self.getHtmlCode(i)
 
     # 遍历 下载文件
