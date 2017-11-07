@@ -1,5 +1,5 @@
-from Spiders.Demo2Spider import *
-Demo2Spider().start()
+from Spiders.DemoSpider import *
+DemoSpider().start()
 
 
 
