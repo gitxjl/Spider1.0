@@ -1,17 +1,23 @@
 from Framework.SpiderBase import *
 import re, bs4, os, string
-from urllib import parse
+from urllib.parse import urlparse
 
-class Demo2Spider(SpiderBase):
+class DemoSpider(SpiderBase):
 
     inUrl = 'http://www.kaifakuai.com'
     httpFormat = ["http", "https"]
     filiter = ["javascrip:","taobao","javascript:void(0)","#","javascript:history.go"]
     cssFormat = [".css",".ico"]
+    domains = [] # 域名参数
 
     def start(self):
+        # 获取域名
+        urlParses = urlparse(self.inUrl)
+        self.domains.append(urlParses.netloc)
+        # 拼接地址，下载页面
         url = self.inUrl + "/index.html"
         self.downFile(url)
+        # 执行获取文件
         self.getHtmlCode(url)
 
     def getHtmlCode(self, url):
@@ -38,7 +44,7 @@ class Demo2Spider(SpiderBase):
                 srcPathArr.append(i)
                 continue
             if self.isStrInList(i, ['.html']) != 1:
-                i = i + 'index.html'
+                i = i + '/index.html'
             nhrefPathArr.append(i)
 
         self.setListsDownFiles(urlPathArr,self.inUrl)
@@ -47,7 +53,10 @@ class Demo2Spider(SpiderBase):
         for i in nhrefPathArr:
             if not self.isFileLocal(i):
                 continue
-            i = self.inUrl + i
+            if self.isStrInList(i, self.httpFormat) == 1:
+                i = i
+            else:
+                i = self.inUrl + i
             self.downFile(i)
             self.getHtmlCode(i)
 
@@ -56,17 +65,24 @@ class Demo2Spider(SpiderBase):
         for i in lists:
             if not self.isFileLocal(i):
                 continue
-            self.downFile(Url + i)
+            if self.isStrInList(i, self.httpFormat) == 1:
+                nUrl = i
+            else:
+                nUrl = Url + i
+            self.downFile(nUrl)
 
     # 过滤非法/不需要字段
     def filteringIllegalURL(self,lists ,domain = ''):
         nLists = []
         for i in lists:
+            if len(i) < 3:
+                continue
             if self.isStrInList(i, self.filiter) == 1:
                 continue
             if self.isStrInList(i, self.httpFormat) == 1:
-                continue
-            if len(i) < 3:
-                continue
+                if self.isStrInList(i, self.domains) == 0:
+                    continue
+                if len(i) <= len(self.inUrl + "/"):
+                    continue
             nLists.append(i)
         return nLists
