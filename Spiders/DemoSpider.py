@@ -6,7 +6,7 @@ class DemoSpider(SpiderBase):
 
     inUrl = 'http://www.kaifakuai.com'
     httpFormat = ["http", "https"]
-    filiter = ["javascrip:","taobao","javascript:void(0)","#","javascript:history.go"]
+    filiter = ["javascrip:","taobao","javascript:void(0)","#","javascript:history.go","zhinengyingjianjiejuefangan","tianyiwulian"]
     cssFormat = [".css",".ico"]
     domains = [] # 域名参数
 
@@ -23,13 +23,11 @@ class DemoSpider(SpiderBase):
     def getHtmlCode(self, url):
         self.log('开始获取：' + url)
 
-        # 判断 url 是否正确
-        if self.isStrInList(url, self.httpFormat) != 1:
-            self.log('url not is url')
-            return
-
+        # 获取内容
         allHtmlCentent = self.getHtmlObj(url)
         strAllHtmlCentent = str(allHtmlCentent)
+
+        # 正则匹配获取
         urlPathArr = re.findall(r"url\((.+?)\)", strAllHtmlCentent)
         hrefPathArr = re.findall(r'href="(.+?)"', strAllHtmlCentent)
         srcPathArr = re.findall(r'src="(.+?)"', strAllHtmlCentent)
